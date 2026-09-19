@@ -51,6 +51,11 @@ from src.visualization import (
 
 
 def main():
+    # Ensure Unicode characters print correctly on Windows (cp1252) terminals
+    if sys.platform == "win32":
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
     # Create output directories
     os.makedirs(PLOTS_DIR, exist_ok=True)
     os.makedirs(RESULTS_DIR, exist_ok=True)
