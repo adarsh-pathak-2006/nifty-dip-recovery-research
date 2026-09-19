@@ -1,0 +1,334 @@
+======================================================================
+NIFTY DIP-RECOVERY RESEARCH ENGINE
+Hypothesis: 'After a significant one-day fall in NIFTY,
+the market tends to recover over the next few trading days.'
+======================================================================
+
+======================================================================
+STEP 1: DATA SOURCING
+======================================================================
+
+Data Summary:
+  Source:       Yahoo Finance (['Date', 'Open', 'High', 'Low', 'Close', 'Volume'])
+  Ticker:       ^NSEI (NIFTY 50)
+  Date Range:   2007-09-17 to 2025-09-17
+  Trading Days: 4416
+
+======================================================================
+STEP 2: DATA VALIDATION & CLEANING
+======================================================================
+============================================================
+DATA VALIDATION REPORT
+============================================================
+
+Date Coverage: 2007-09-17 to 2025-09-17
+Trading Days:  4416
+Calendar Days: 6575
+
+Duplicate Dates: 0
+Chronologically Sorted: True
+
+Missing OHLC Values:
+  Open: [OK]
+  High: [OK]
+  Low: [OK]
+  Close: [OK]
+
+OHLC Consistency: [OK] All checks passed
+
+Suspicious Observations (|return| > 10%): 3
+  2008-10-24 00:00:00 — Close: 2584.00, Return: -12.20%
+  2009-05-18 00:00:00 — Close: 4323.15, Return: 17.74%
+  2020-03-23 00:00:00 — Close: 7610.25, Return: -12.98%
+
+Large Gaps (> 5 calendar days): 1
+  2014-10-07 00:00:00 — 6 day gap
+
+============================================================
+
+======================================================================
+STEP 3: EVENT DETECTION & ANALYSIS
+  Threshold: -2.00%
+  Cooldown:  5 trading days
+  Entry:     Next-day Open
+  Exit:      Close of holding-period day
+======================================================================
+
+Event Forward Return Statistics:
+
+   Holding |     N |     Mean |   Median |      Std |   Win% |   AvgWin |  AvgLoss
+--------------------------------------------------------------------------------
+       1d |   128 |  -0.0026 |  -0.0021 |   0.0301 | 46.9% |   0.0202 |  -0.0228
+       3d |   128 |   0.0004 |   0.0007 |   0.0413 | 50.0% |   0.0307 |  -0.0298
+       5d |   128 |   0.0033 |   0.0012 |   0.0477 | 50.0% |   0.0389 |  -0.0324
+      10d |   128 |   0.0090 |   0.0171 |   0.0652 | 57.0% |   0.0510 |  -0.0468
+
+Baseline (All-Day) Forward Return Statistics:
+  1d: mean=-0.0000, win_rate=51.0%, n=4414
+  3d: mean=0.0009, win_rate=53.9%, n=4412
+  5d: mean=0.0018, win_rate=54.9%, n=4410
+  10d: mean=0.0041, win_rate=57.1%, n=4405
+
+[Saved] Event vs baseline comparison → output/results/event_vs_baseline.csv
+
+======================================================================
+STEP 4: STATISTICAL EVIDENCE
+======================================================================
+
+======================================================================
+STATISTICAL TEST RESULTS
+======================================================================
+
+--- Holding Period: 1 trading days ---
+
+  1. One-sample t-test
+     H0: Mean forward return = 0
+     Mean = -0.0026, SE = 0.0027
+     t = -0.982, p (one-sided) = 0.8359
+     Significant at 5%: NO
+
+  2. Wilcoxon signed-rank
+     Median = -0.0021
+     p = 0.8007
+     Significant at 5%: NO
+
+  3. 95% Confidence Interval (Parametric (t-distribution))
+     [-0.0079, 0.0027]
+     Contains zero: YES - includes zero
+
+  4. Bootstrap CI (10000 iterations)
+     [-0.0079, 0.0025]
+     Contains zero: YES
+
+  5. Welch's two-sample t-test (Event vs Baseline)
+     Event mean: -0.0026, Baseline mean: -0.0000
+     Difference: -0.0026
+     p (one-sided) = 0.8320
+     Significant at 5%: NO
+
+--- Holding Period: 3 trading days ---
+
+  1. One-sample t-test
+     H0: Mean forward return = 0
+     Mean = 0.0004, SE = 0.0037
+     t = 0.120, p (one-sided) = 0.4523
+     Significant at 5%: NO
+
+  2. Wilcoxon signed-rank
+     Median = 0.0007
+     p = 0.3598
+     Significant at 5%: NO
+
+  3. 95% Confidence Interval (Parametric (t-distribution))
+     [-0.0068, 0.0077]
+     Contains zero: YES - includes zero
+
+  4. Bootstrap CI (10000 iterations)
+     [-0.0068, 0.0075]
+     Contains zero: YES
+
+  5. Welch's two-sample t-test (Event vs Baseline)
+     Event mean: 0.0004, Baseline mean: 0.0009
+     Difference: -0.0005
+     p (one-sided) = 0.5497
+     Significant at 5%: NO
+
+--- Holding Period: 5 trading days ---
+
+  1. One-sample t-test
+     H0: Mean forward return = 0
+     Mean = 0.0033, SE = 0.0042
+     t = 0.778, p (one-sided) = 0.2189
+     Significant at 5%: NO
+
+  2. Wilcoxon signed-rank
+     Median = 0.0012
+     p = 0.1068
+     Significant at 5%: NO
+
+  3. 95% Confidence Interval (Parametric (t-distribution))
+     [-0.0051, 0.0116]
+     Contains zero: YES - includes zero
+
+  4. Bootstrap CI (10000 iterations)
+     [-0.0051, 0.0115]
+     Contains zero: YES
+
+  5. Welch's two-sample t-test (Event vs Baseline)
+     Event mean: 0.0033, Baseline mean: 0.0018
+     Difference: 0.0015
+     p (one-sided) = 0.3643
+     Significant at 5%: NO
+
+--- Holding Period: 10 trading days ---
+
+  1. One-sample t-test
+     H0: Mean forward return = 0
+     Mean = 0.0090, SE = 0.0058
+     t = 1.556, p (one-sided) = 0.0610
+     Significant at 5%: NO
+
+  2. Wilcoxon signed-rank
+     Median = 0.0171
+     p = 0.0104
+     Significant at 5%: YES
+
+  3. 95% Confidence Interval (Parametric (t-distribution))
+     [-0.0024, 0.0204]
+     Contains zero: YES - includes zero
+
+  4. Bootstrap CI (10000 iterations)
+     [-0.0025, 0.0202]
+     Contains zero: YES
+
+  5. Welch's two-sample t-test (Event vs Baseline)
+     Event mean: 0.0090, Baseline mean: 0.0041
+     Difference: 0.0049
+     p (one-sided) = 0.1993
+     Significant at 5%: NO
+
+======================================================================
+
+======================================================================
+STEP 5: ROBUSTNESS SWEEP
+  Thresholds:      [-0.01, -0.015, -0.02, -0.025, -0.03]
+  Holding Periods: [1, 3, 5, 10, 15, 20]
+======================================================================
+
+[Saved] Robustness results → output/results/robustness_sweep.csv
+
+Robustness: 8/30 parameter combinations are statistically significant at 5%
+
+======================================================================
+STEP 6: OUT-OF-SAMPLE VALIDATION
+  Split Ratio: 70% / 30%
+======================================================================
+
+======================================================================
+IN-SAMPLE vs OUT-OF-SAMPLE COMPARISON
+======================================================================
+
+In-Sample:
+  Events: 105
+  1d: mean=-0.0045, median=-0.0062, win_rate=41.9%, n=105
+  3d: mean=-0.0014, median=-0.0026, win_rate=48.6%, n=105
+  5d: mean=0.0011, median=-0.0026, win_rate=47.6%, n=105
+  10d: mean=0.0050, median=0.0056, win_rate=51.9%, n=104
+
+Out-Of-Sample:
+  Events: 23
+  1d: mean=0.0080, median=0.0107, win_rate=73.9%, n=23
+  3d: mean=0.0097, median=0.0087, win_rate=60.9%, n=23
+  5d: mean=0.0154, median=0.0151, win_rate=65.2%, n=23
+  10d: mean=0.0321, median=0.0240, win_rate=82.6%, n=23
+
+======================================================================
+
+======================================================================
+STEP 7: SIMPLE EVENT-DRIVEN BACKTEST
+======================================================================
+
+============================================================
+BACKTEST RESULTS (Holding Period: 5 days)
+============================================================
+  Total Trades:          115
+  Total Return:          42.57%
+  CAGR:                  2.05%
+  Mean Return/Trade:     0.0042
+  Median Return/Trade:   0.0056
+  Win Rate:              53.0%
+  Avg Win:               0.0376
+  Avg Loss:              -0.0335
+  Profit Factor:         1.27
+  Max Drawdown:          -36.83%
+  Best Trade:            0.1571
+  Worst Trade:           -0.1672
+  Final Equity (1→):     1.4257
+============================================================
+[Saved] Trade log → output/results/backtest_trades.csv
+
+======================================================================
+STEP 8: GENERATING VISUALIZATIONS
+======================================================================
+
+======================================================================
+STEP 9: CHALLENGING THE RESULT
+======================================================================
+
+--- Potential Sources of Spurious Results ---
+
+1. LOOK-AHEAD BIAS:
+   ✓ Mitigated: Entry at next-day Open (unknowable at event close).
+   ✓ Events detected using only close-to-close returns known at EOD.
+
+2. SLIPPAGE & TRANSACTION COSTS:
+   Applied 0.20% round-trip cost per trade.
+   Real-world costs could be higher during volatile periods.
+
+3. SAMPLE SIZE:
+   128 qualifying events over the full sample.
+   Adequate for basic parametric tests.
+
+4. OVERLAPPING EVENTS:
+   Applied 5-day cooldown to reduce overlap.
+   Events during sustained crashes may still be correlated.
+
+5. MARKET REGIMES:
+   The data spans multiple regimes (2008 GFC, 2020 COVID, etc.).
+   Results may be driven by a small number of extreme episodes.
+
+6. DATA QUALITY:
+   Yahoo Finance data is not exchange-official.
+   Minor discrepancies vs. NSE official data may exist.
+
+7. MULTIPLE TESTING:
+   We test multiple holding periods and thresholds.
+   Without Bonferroni or similar correction, some may be
+   significant by chance alone.
+
+--- Falsification Criteria ---
+The hypothesis would be rejected if:
+  • Mean forward returns are not significantly > 0 (p > 0.05)
+  • Event returns are not meaningfully different from baseline
+  • Results do not replicate out-of-sample
+  • Net-of-cost backtest returns are negative
+  • Results are driven by ≤ 3 extreme events
+
+======================================================================
+STEP 10: CONCLUSION
+======================================================================
+
+  1-day holding period:
+    Mean return:    -0.0026
+    p-value:        0.8359
+    Significant:    NO
+    Bootstrap excl. zero: NO
+    Excess vs baseline:   -0.0026
+
+  3-day holding period:
+    Mean return:    0.0004
+    p-value:        0.4523
+    Significant:    NO
+    Bootstrap excl. zero: NO
+    Excess vs baseline:   -0.0005
+
+  5-day holding period:
+    Mean return:    0.0033
+    p-value:        0.2189
+    Significant:    NO
+    Bootstrap excl. zero: NO
+    Excess vs baseline:   0.0015
+
+  10-day holding period:
+    Mean return:    0.0090
+    p-value:        0.0610
+    Significant:    NO
+    Bootstrap excl. zero: NO
+    Excess vs baseline:   0.0049
+
+  Summary: 0/4 holding periods show statistically significant positive returns after events.
+  → Evidence does NOT support the hypothesis.
+
+  NOTE: Statistical significance ≠ economic significance.
+  Transaction costs, slippage, and market impact may erode
+  any theoretical edge in practice.
